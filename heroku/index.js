@@ -25,7 +25,7 @@ app.get('/', function(req, res) {
   res.send('<pre>' + JSON.stringify(received_updates, null, 2) + '</pre>');
 });
 
-app.get(['/facebook', '/instagram', '/threads'], function(req, res) {
+app.get(['/facebook', '/instagram', '/threads', '/whatsapp/webhook'], function(req, res) {
   if (
     req.query['hub.mode'] == 'subscribe' &&
     req.query['hub.verify_token'] == token
@@ -53,7 +53,7 @@ app.post('/facebook', function(req, res) {
 
 app.post('/instagram', function(req, res) {
   console.log('Instagram request body:');
-  console.log(req.body);
+  console.log(JSON.stringify(req.body, null, 2));
   // Process the Instagram updates here
   received_updates.unshift(req.body);
   res.sendStatus(200);
@@ -61,8 +61,16 @@ app.post('/instagram', function(req, res) {
 
 app.post('/threads', function(req, res) {
   console.log('Threads request body:');
-  console.log(req.body);
+  console.log(JSON.stringify(req.body, null, 2));
   // Process the Threads updates here
+  received_updates.unshift(req.body);
+  res.sendStatus(200);
+});
+
+app.post('/whatsapp/webhook', function(req, res) {
+  console.log('Whatapp request body:');
+  console.log(JSON.stringify(req.body, null, 2));
+  // Process the Whatsapp updates here
   received_updates.unshift(req.body);
   res.sendStatus(200);
 });
